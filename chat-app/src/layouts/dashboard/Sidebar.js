@@ -4,15 +4,18 @@ import { useTheme } from "@mui/material/styles";
 import { Gear } from 'phosphor-react';
 import { faker } from '@faker-js/faker';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import Logo from "../../assets/Images/logo.ico";
 import { Profile_Menu, Nav_Buttons } from "../../data/index";
 import useSettings from "../../hooks/useSettings";
 import AntSwitch from '../../components/AntSwitch';
+import { logoutUser } from '../../redux/slices/auth';
 
 const Sidebar = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { onToggleMode } = useSettings();
 
     const [selected, setSelected] = useState(0);
@@ -234,7 +237,14 @@ const Sidebar = () => {
                                     }}
                                 >
                                     <Stack
-                                        onClick={() => navigate(getMenuPath(index))}
+                                        onClick={() => {
+                                            // if index is 2 then dispatch logout
+                                            if (index === 2) {
+                                                dispatch(logoutUser());
+                                            } else {
+                                                navigate(getMenuPath(index))
+                                            }
+                                        }}
                                         sx={{ width: 100 }}
                                         direction={'row'}
                                         alignItems={'center'}
