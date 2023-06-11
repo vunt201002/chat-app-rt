@@ -4,12 +4,16 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, IconButton, InputAdornment, Stack } from '@mui/material';
 import { Eye, EyeSlash } from 'phosphor-react';
+import { useDispatch } from 'react-redux'
 
 import RHFTextField from '../../components/hook-form/RHFTextField';
 import FormProvider from '../../components/hook-form/FormProvider';
+import { registerUser } from '../../redux/slices/auth';
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
+
+    const dispatch = useDispatch();
 
     const registerSchema = Yup.object().shape({
         firstName: Yup.string().required("First name is required"),
@@ -19,10 +23,10 @@ const RegisterForm = () => {
     });
 
     const defaultValues = {
-        firstName: "",
-        lastName: "",
-        email: 'demo@gmail.com',
-        password: '12345678',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: ''
     };
 
     const methods = useForm({
@@ -35,15 +39,14 @@ const RegisterForm = () => {
         setError,
         handleSubmit,
         formState: {
-            errors,
-            isSubmitting,
-            isSubmitSuccessful,
+            errors
         }
     } = methods;
 
     const onSubmit = async data => {
         try {
-
+            // call api
+            dispatch(registerUser(data));
         } catch (err) {
             console.log(err);
             reset();
@@ -63,7 +66,7 @@ const RegisterForm = () => {
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                     <RHFTextField name='firstName' label='First name'/>
-                    <RHFTextField name='lasttName' label='Last name'/>
+                    <RHFTextField name='lastName' label='Last name'/>
                 </Stack>
 
                 <RHFTextField name='email' label='Email address'/>
