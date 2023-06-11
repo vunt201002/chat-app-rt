@@ -81,7 +81,7 @@ const LoginForm = () => {
             <Stack alignItems={'flex-end'} sx={{ my: 2 }}>
                 <Link
                     component={RouterLink}
-                    to={'/auth/reset-password'}
+                    to={'/auth/forgot-password'}
                     variant='body2'
                     color={'inherit'}
                     underline='always'

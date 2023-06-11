@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const { promisify } = require('util');
 const filterObj = require('../utils/filterObject');
 const otp = require('../Templates/Mail/otp');
+const resetPassword = require('../Templates/Mail/resetPassword');
 const AppError = require('../utils/AppError');
 
 // models
@@ -259,8 +260,22 @@ exports.forgotPassword = async (req, res, next) => {
     
     // send email with reset url
     try {
-        const resetUrl = `http://localhost/auth/reset-password/?code=${resetToken}`;
+        const resetUrl = `http://localhost:3000/auth/reset-password/?token=${resetToken}`;
         // TODO: Send Email with this Reset URL to user's email address
+
+        mailService
+            .sendEmail({
+                // from: "@gmail.com",
+                to: user.email,
+                subject: "Reset Password",
+                html: resetPassword(user.firstName, resetUrl),
+            })
+            // .then(() => {
+
+            // })
+            // .catch((err) => {
+            //     console.log(err);
+            // });
 
         console.log(resetToken);
 

@@ -33,11 +33,11 @@ export default function Router() {
                 },
                 {
                     element: <ResetPasswordPage />,
-                    path: 'reset-password',
+                    path: 'forgot-password',
                 },
                 {
                     element: <NewPasswordPage />,
-                    path: 'new-password',
+                    path: 'reset-password',
                 },
             ],
         },

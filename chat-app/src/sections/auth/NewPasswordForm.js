@@ -2,31 +2,36 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, IconButton, InputAdornment, Link, Stack } from "@mui/material";
+import { Alert, Button, IconButton, InputAdornment, Stack } from "@mui/material";
 import { Eye, EyeSlash } from 'phosphor-react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 
 import RHFTextField from '../../components/hook-form/RHFTextField';
 import FormProvider from '../../components/hook-form/FormProvider';
+import { newPassword } from '../../redux/slices/auth';
 
 const NewPasswordForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showCPassword, setShowCPassword] = useState(false);
 
+    const dispatch = useDispatch();
+    const [queryParameters] = useSearchParams();
+
     const newPasswordSchema = Yup.object().shape({
-        newPassword: Yup
+        password: Yup
                     .string()
                     .min(6, "Password at least 6 characters")
                     .required("New password is required"),
-        confirmPassword: Yup
+        passwordConfirm: Yup
                     .string()
                     .required("Confirm password is required")
-                    .oneOf([Yup.ref('newPassword'), null], 'Confirm password does not match'),
+                    .oneOf([Yup.ref('password'), null], 'Confirm password does not match'),
     });
 
     const defaultValues = {
-        newPassword: '',
-        confirmPassword: '',
+        password: '',
+        passwordConfirm: '',
     };
 
     const methods = useForm({
@@ -47,7 +52,13 @@ const NewPasswordForm = () => {
 
     const onSubmit = async data => {
         try {
-
+            // call api
+            dispatch(newPassword(
+                {
+                    ...data,
+                    token: queryParameters.get('token')
+                }
+            ));            
         } catch (err) {
             console.log(err);
             reset();
@@ -65,7 +76,7 @@ const NewPasswordForm = () => {
                     <Alert severity='Error'>{errors.afterSubmit.message}</Alert>
                 }
                 <RHFTextField
-                    name='newPassword'
+                    name='password'
                     label='New password'
                     type={showPassword ? 'text' : 'password'}
                     InputProps={{
@@ -79,7 +90,7 @@ const NewPasswordForm = () => {
                     }}
                 />
                 <RHFTextField
-                    name='confirmPassword'
+                    name='passwordConfirm'
                     label='Confirm password'
                     type={showCPassword ? 'text' : 'password'}
                     InputProps={{
