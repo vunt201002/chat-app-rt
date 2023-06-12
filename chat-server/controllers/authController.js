@@ -206,7 +206,7 @@ exports.protect = async (req, res, next) => {
     // getting jwt token and check
     let token;
 
-    if(req.headers.authorization && req.headers.authorization.startWith("Bearer")) {
+    if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         token = req.headers.authorization.split(" ")[1];
 
     } else if (req.cookies.jwt) {
@@ -223,8 +223,8 @@ exports.protect = async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
     // check if user still exist
-    const thisUser = await User.findById(decoded.id);
-
+    const thisUser = await User.findById(decoded.userId);
+    console.log(token, decoded.userId);
     if (!thisUser) {
         return next(
             new AppError(
@@ -235,7 +235,7 @@ exports.protect = async (req, res, next) => {
     }
 
     // check if user change the password after token was issued
-    if (thisUser.changedPasswordAfter(decode.iat)) {
+    if (thisUser.changedPasswordAfter(decoded.iat)) {
         return next(
             new AppError("User recently changed password! Please log in again.", 401)
         );

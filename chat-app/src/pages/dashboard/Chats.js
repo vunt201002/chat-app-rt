@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Button,
@@ -7,7 +7,7 @@ import {
     Stack,
     Typography
 } from '@mui/material';
-import { ArchiveBox, CircleDashed, MagnifyingGlass } from 'phosphor-react';
+import { ArchiveBox, CircleDashed, MagnifyingGlass, Users } from 'phosphor-react';
 import { useTheme } from '@emotion/react';
 
 import { ChatList } from '../../data/index';
@@ -15,11 +15,23 @@ import { SimpleBarStyle } from '../../components/Scrollbar';
 import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Search/index'; 
 
 import ChatElement from '../../components/ChatElement';
+import Friends from '../../sections/main/Friends';
 
 const Chats = () => {
     const theme = useTheme();
 
+    const [openDialog, setOpenDialog] = useState(false);
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    }
+
     return (
+        <>
             <Box
                 sx={{
                     position: 'relative',
@@ -37,9 +49,16 @@ const Chats = () => {
                         justifyContent={'space-between'}
                     >
                         <Typography variant='h5'>Chats</Typography>
-                        <IconButton>
-                            <CircleDashed />
-                        </IconButton>
+                        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'}>
+                            <IconButton onClick={() => {
+                                handleOpenDialog();
+                            }}>
+                                <Users />
+                            </IconButton>
+                            <IconButton>
+                                <CircleDashed />
+                            </IconButton>
+                        </Stack>
                     </Stack>
 
                     {/* thanh search */}
@@ -110,6 +129,8 @@ const Chats = () => {
                     </Stack>
                 </Stack>
             </Box>
+            {openDialog && <Friends open={openDialog} handleClose={handleCloseDialog}/>}
+        </>
     )
 };
 
