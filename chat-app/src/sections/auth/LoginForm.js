@@ -22,8 +22,8 @@ const LoginForm = () => {
     });
 
     const defaultValues = {
-        email: 'demo@gmail.com',
-        password: '12345678',
+        email: '@gmail.com',
+        password: '123456',
     };
 
     const methods = useForm({

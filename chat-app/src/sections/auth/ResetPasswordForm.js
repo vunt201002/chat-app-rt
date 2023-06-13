@@ -17,7 +17,7 @@ const ResetPasswordForm = () => {
     });
 
     const defaultValues = {
-        email: 'demo@gmail.com',
+        email: '@gmail.com',
     };
 
     const methods = useForm({

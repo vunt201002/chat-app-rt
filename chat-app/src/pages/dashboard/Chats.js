@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -16,11 +16,17 @@ import { Search, SearchIconWrapper, StyledInputBase } from '../../components/Sea
 
 import ChatElement from '../../components/ChatElement';
 import Friends from '../../sections/main/Friends';
+import { socket } from '../../socket';
+import { useSelector } from 'react-redux';
 
 const Chats = () => {
     const theme = useTheme();
 
+    const user_id = window.localStorage.getItem("user_id");
+
     const [openDialog, setOpenDialog] = useState(false);
+
+    const { conversations } = useSelector(state => state.conversation.direct_chat);
 
     const handleOpenDialog = () => {
         setOpenDialog(true);
@@ -28,7 +34,18 @@ const Chats = () => {
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-    }
+    };
+
+    useEffect(() => {
+        socket.emit(
+            "get_direct_conversations",
+            { user_id },
+            (data) => {
+                // data is list of conversations
+                
+            }
+        );
+    }, []);
 
     return (
         <>
@@ -99,7 +116,7 @@ const Chats = () => {
                         }}
                     >
                         <SimpleBarStyle timeout={500}>
-                            <Stack spacing={2.4}>
+                            {/* <Stack spacing={2.4}>
                                 <Typography
                                     variant='subtitle2'
                                     sx={{
@@ -111,7 +128,7 @@ const Chats = () => {
                                 {ChatList.filter(el => el.pinned).map(el => (                    
                                     <ChatElement key={el.id} {...el}/>
                                 ))}
-                            </Stack>
+                            </Stack> */}
                             <Stack spacing={2.4}>
                                 <Typography
                                     variant='subtitle2'
@@ -121,7 +138,7 @@ const Chats = () => {
                                 >
                                     All chats
                                 </Typography>
-                                {ChatList.filter(el => !el.pinned).map(el => (                    
+                                {conversations.filter(el => !el.pinned).map(el => (                    
                                     <ChatElement key={el.id} {...el}/>
                                 ))}
                             </Stack>
